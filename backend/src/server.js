@@ -7,10 +7,12 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-connectDB();
+app.use(express.json());
 
 app.use("/api/tasks", taskRouter);
 
-app.listen(PORT, () => {
-  console.log(`Start port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Start port ${PORT}`);
+  });
 });

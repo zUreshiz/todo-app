@@ -12,7 +12,7 @@ router.get("/", getAllTasks);
 
 router.post("/", createTask);
 
-router.post("/:id", updateTask);
+router.put("/:id", updateTask);
 
 router.delete("/:id", deleteTask);
 
