@@ -10,16 +10,16 @@ const TaskEmptyState = ({ filter }) => {
         <div>
           <h3 className="font-medium text-foreground">
             {filter === "active"
-              ? "No quest working"
+              ? "No task working"
               : filter === "completed"
-              ? "No quest completed"
-              : "No quest"}
+              ? "No task completed"
+              : "No task"}
           </h3>
 
           <p className="text-sm text-muted-foreground">
             {filter === "all"
-              ? "Add new quest"
-              : `Move to 'All' to see quest ${
+              ? "Add new task"
+              : `Move to 'All' to see task ${
                   filter === "active" ? "completed" : "on working"
                 }`}
           </p>

@@ -49,7 +49,7 @@ export const updateTask = async (req, res) => {
       { new: true }
     );
     if (!updatedTask) {
-      return res.status(404).json({ message: " No quest found" });
+      return res.status(404).json({ message: " No task found" });
     }
     res.status(200).json(updatedTask);
   } catch (error) {
@@ -63,7 +63,7 @@ export const deleteTask = async (req, res) => {
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
 
     if (!deletedTask) {
-      return res.status(404).json({ message: " No quest found" });
+      return res.status(404).json({ message: " No task found" });
     } else res.status(200).json(deletedTask);
   } catch (error) {
     console.log("updatedTask Failed: ", error);

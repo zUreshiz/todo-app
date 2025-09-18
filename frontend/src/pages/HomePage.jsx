@@ -7,7 +7,7 @@ import StatsAndFilters from "../components/StatsAndFilters.jsx";
 import TaskList from "../components/TaskList.jsx";
 import TaskListPagination from "../components/TaskListPagination.jsx";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../lib/axios";
 
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
@@ -15,21 +15,23 @@ const HomePage = () => {
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
   const [filter, setFilter] = useState("all");
 
+  const fetchTasks = async () => {
+    try {
+      const res = await api.get("/tasks");
+      setTaskBuffer(res.data.tasks);
+      setActiveTaskCount(res.data.activeCount);
+      setCompleteTaskCount(res.data.completeCount);
+      console.log(res.data.tasks);
+    } catch (error) {
+      console.log("Error data:", error);
+      toast.error("Error tasks data");
+    }
+  };
+
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/tasks");
-        setTaskBuffer(res.data.tasks);
-        setActiveTaskCount(res.data.activeCount);
-        setCompleteTaskCount(res.data.completeCount);
-        console.log(res.data.tasks);
-      } catch (error) {
-        console.log("Error data:", error);
-        toast.error("Error tasks data");
-      }
-    };
     fetchTasks();
   }, []);
+
   const filteredTask = taskBuffer.filter((task) => {
     switch (filter) {
       case "active":
@@ -40,6 +42,10 @@ const HomePage = () => {
         return true;
     }
   });
+
+  const handleTaskChange = () => {
+    fetchTasks();
+  };
 
   return (
     <div className="min-h-screen w-full relative">
@@ -53,14 +59,18 @@ const HomePage = () => {
       <div className="container pt-8 mx-auto relative z-10">
         <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
           <Header />
-          <AddTask />
+          <AddTask handleNewTaskAdded={handleTaskChange} />
           <StatsAndFilters
             filter={filter}
             setFilter={setFilter}
             completedTasksCount={completeTaskCount}
             activeTasksCount={activeTaskCount}
           />
-          <TaskList filteredTasks={filteredTask} filter={filter} />
+          <TaskList
+            filteredTasks={filteredTask}
+            filter={filter}
+            handleTaskChanged={handleTaskChange}
+          />
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />
             <DateTimeFilters />
